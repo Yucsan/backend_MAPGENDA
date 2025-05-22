@@ -19,7 +19,7 @@
   <description>API REST para Aventura a la Carta</description>
 
   <properties>
-    <java.version>21</java.version>
+    <java.version>17</java.version>
     <spring-boot.version>3.4.4</spring-boot.version>
     <!-- Ahora puedes usar ${spring-boot.version} en los plugins -->
   </properties>
