@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://dpg-d0no6uk9c44c738hts9g-a:5432/mapgenda_db
-    username: postgres
+    username: fernando
     password: postgres
     driver-class-name: org.postgresql.Driver
 
