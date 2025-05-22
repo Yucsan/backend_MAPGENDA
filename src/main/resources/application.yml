@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/aventura_db
+    url: jdbc:postgresql://dpg-d0no6uk9c44c738hts9g-a:5432/mapgenda_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
