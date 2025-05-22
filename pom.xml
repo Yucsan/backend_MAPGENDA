@@ -136,6 +136,12 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <annotationProcessorPaths>
+          <!-- 1) Primero Lombok -->
+          <path>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+          </path>
             <!-- Config processor -->
             <path>
               <groupId>org.springframework.boot</groupId>
