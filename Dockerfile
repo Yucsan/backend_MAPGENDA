@@ -1,25 +1,26 @@
-# 1) build stage
-FROM maven:3.9.0-eclipse-temurin-17 AS builder
+# Usa una imagen con JDK 21 y Maven ya configurados
+FROM maven:3.9.4-eclipse-temurin-21 AS builder
+
 WORKDIR /app
 
-# Copiamos wrapper y pom
-COPY pom.xml mvnw ./
+# Copia pom.xml y descarga dependencias primero (cache optimizada)
+COPY pom.xml .
 COPY .mvn .mvn
-
-# Hacemos mvnw ejecutable
-RUN chmod +x mvnw
-
-# Ahora sí bajamos dependencias
+COPY mvnw .
 RUN ./mvnw dependency:go-offline -B
 
-# Copiamos el código y empaquetamos
-COPY src src
+# Copia el resto del código
+COPY src ./src
+
+# Compila el proyecto (sin tests)
 RUN ./mvnw package -DskipTests -B
 
-# 2) run stage
-FROM eclipse-temurin:17-jre-alpine
+
+# Etapa final: crea imagen liviana con solo el JAR
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-ENV PORT=${PORT}
-ENTRYPOINT ["java","-jar","app.jar"]
+COPY --from=builder /app/target/api-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
