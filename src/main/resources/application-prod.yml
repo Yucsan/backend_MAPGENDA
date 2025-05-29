@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d0no6uk9c44c738hts9g-a:5432/mapgenda_db
-    username: fernando
-    password: Q3RyQIfZgze4IG4FkGQ0o2qO5MTJUBvo
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
