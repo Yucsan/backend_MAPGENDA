@@ -19,6 +19,7 @@ public class UsuarioDTO {
     private String telefono;
     private String pais;
     private String ciudad;
+    private String fotoPerfilUrl;
     private String direccion;
     private String descripcion;
     private Boolean verificado;

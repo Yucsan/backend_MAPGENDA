@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/lugares")
@@ -69,9 +70,17 @@ public class LugarController {
             return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(errores);
         }
     }
+    
+    @GetMapping("/usuario/{usuarioId}")
+    public List<LugarDTO> getLugaresDelUsuario(@PathVariable UUID usuarioId) {
+        return lugarService.findByUsuarioId(usuarioId);
+    }
+    
+    
+
 
     
     
-    
+ 
     
 }

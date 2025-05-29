@@ -1,5 +1,7 @@
 package com.aventura.api.dto;
 
+import java.util.UUID;
+
 import lombok.*;
 
 @Data
@@ -16,4 +18,6 @@ public class LugarDTO {
     private String fotoUrl;
     private boolean abiertoAhora;
     private int duracionEstimadaMinutos;
+    private UUID usuarioId;
+
 }

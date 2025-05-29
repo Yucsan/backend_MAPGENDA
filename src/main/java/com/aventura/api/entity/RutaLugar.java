@@ -14,15 +14,12 @@ public class RutaLugar {
 	 	@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
-
+	 	
 	    @ManyToOne
 	    private Ruta ruta;
-
+	    
 	    @ManyToOne
 	    private Lugar lugar;
-
-	    private Integer orden; // Si quieres saber en qué posición va dentro de la ruta
 	    
-
-
+	    private Integer orden; // Si quieres saber en qué posición va dentro de la ruta
 }

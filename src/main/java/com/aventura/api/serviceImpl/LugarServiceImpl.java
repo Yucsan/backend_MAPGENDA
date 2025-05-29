@@ -2,8 +2,10 @@ package com.aventura.api.serviceImpl;
 
 import com.aventura.api.dto.LugarDTO;
 import com.aventura.api.entity.Lugar;
+import com.aventura.api.entity.Usuario;
 import com.aventura.api.mapper.LugarMapper;
 import com.aventura.api.repository.LugarRepository;
+import com.aventura.api.repository.UsuarioRepository;
 import com.aventura.api.service.LugarService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +23,9 @@ public class LugarServiceImpl implements LugarService {
 
     @Autowired
     private LugarRepository lugarRepository;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private LugarMapper lugarMapper;
@@ -41,6 +47,11 @@ public class LugarServiceImpl implements LugarService {
     @Override
     public LugarDTO save(LugarDTO dto) {
         Lugar lugar = lugarMapper.toEntity(dto);
+        // 💡 Buscar el usuario por ID
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        lugar.setUsuario(usuario);
         Lugar guardado = lugarRepository.save(lugar);
         return lugarMapper.toDTO(guardado);
     }
@@ -71,4 +82,20 @@ public class LugarServiceImpl implements LugarService {
 			    Lugar guardado = lugarRepository.save(lugarExistente);
 			    return lugarMapper.toDTO(guardado);
 	}
+	
+	
+	@Override
+	public List<LugarDTO> findByUsuarioId(UUID usuarioId) {
+	    List<Lugar> lugares = lugarRepository.findByUsuario_Id(usuarioId);
+	    return lugares.stream()
+	                  .map(lugarMapper::toDTO)
+	                  .toList();
+	}
+
+
+	
+	
+	
+
+	
 }

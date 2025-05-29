@@ -28,4 +28,9 @@ public class Lugar {
 
     @Column(name = "duracion_estimada_minutos")
     private int duracionEstimadaMinutos;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 }

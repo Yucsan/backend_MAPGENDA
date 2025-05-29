@@ -47,7 +47,7 @@ public class UsuarioController {
 	}
 	
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable UUID id) {
     	UsuarioDTO usuario = usuarioService.getById(id);
     	return ResponseEntity.ok(usuario);

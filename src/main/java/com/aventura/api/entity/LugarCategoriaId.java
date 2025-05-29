@@ -11,7 +11,6 @@ import java.util.Objects;
  - No dependés de comportamiento interno de Lombok para algo tan sensible
  */
 
-
 public class LugarCategoriaId implements Serializable {
 
     private String lugar;
