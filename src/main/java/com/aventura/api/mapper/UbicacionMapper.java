@@ -1,6 +1,8 @@
 package com.aventura.api.mapper;
 
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.aventura.api.dto.UbicacionDTO;
@@ -17,7 +19,12 @@ public class UbicacionMapper {
         u.setLatitud(dto.getLatitud());
         u.setLongitud(dto.getLongitud());
         u.setTipo(dto.getTipo());
-        u.setFechaCreacion(dto.getFechaCreacion());
+        
+        if (dto.getFechaCreacion() != null) {
+            u.setFechaCreacion(dto.getFechaCreacion());
+        } else {
+            u.setFechaCreacion(System.currentTimeMillis());
+        }
         u.setUsuario(usuario);
         return u;
     }

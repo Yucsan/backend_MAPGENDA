@@ -3,6 +3,7 @@ package com.aventura.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,7 @@ public class Ubicacion {
     private String tipo; // "país" o "provincia"
 
     @Column(name = "fecha_creacion")
-    private Instant fechaCreacion;
+    private Long fechaCreacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)

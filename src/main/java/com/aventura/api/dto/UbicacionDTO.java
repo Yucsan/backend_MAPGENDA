@@ -2,6 +2,7 @@ package com.aventura.api.dto;
 
 import lombok.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -14,6 +15,6 @@ public class UbicacionDTO {
     private double latitud;
     private double longitud;
     private String tipo; // Validado más adelante
-    private Instant fechaCreacion;
+    private Long fechaCreacion;
     private UUID usuarioId;
 }
