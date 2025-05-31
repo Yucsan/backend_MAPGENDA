@@ -26,7 +26,7 @@ public class Ubicacion {
     private String tipo; // "país" o "provincia"
 
     @Column(name = "fecha_creacion")
-    private Long fechaCreacion;
+    private LocalDateTime  fechaCreacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
