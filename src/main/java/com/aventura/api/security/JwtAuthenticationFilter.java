@@ -33,6 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
             String userId = tokenProvider.getUserIdFromToken(token); // ✅ ahora devuelve el UUID
+            System.out.println("🔐 JWT subject recibido: " + userId);
+
             try {
                 Usuario usuario = usuarioService.findById(UUID.fromString(userId)).orElse(null); // ✅ búsqueda por ID
                 if (usuario != null) {
