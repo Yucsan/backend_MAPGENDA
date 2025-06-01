@@ -29,24 +29,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("🟡 JwtAuthenticationFilter ejecutado");
+
         String token = getJwtFromRequest(request);
+        System.out.println("🔐 TOKEN recibido: " + token);
 
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            String userId = tokenProvider.getUserIdFromToken(token); // ✅ ahora devuelve el UUID
-            System.out.println("🔐 JWT subject recibido: " + userId);
+            String userId = tokenProvider.getUserIdFromToken(token);
+            System.out.println("✅ JWT válido. Subject (UUID): " + userId);
 
             try {
-                Usuario usuario = usuarioService.findById(UUID.fromString(userId)).orElse(null); // ✅ búsqueda por ID
+                Usuario usuario = usuarioService.findById(UUID.fromString(userId)).orElse(null);
                 if (usuario != null) {
+                    System.out.println("🙋 Usuario autenticado: " + usuario.getEmail());
+
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             usuario, null, null
                     );
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    System.out.println("⚠️ Usuario con ID no encontrado en DB: " + userId);
                 }
             } catch (IllegalArgumentException e) {
-                logger.warn("❌ Token inválido: no se pudo convertir a UUID: " + userId);
+                System.out.println("❌ Token inválido: no es UUID válido -> " + userId);
             }
+        } else {
+            System.out.println("🚫 Token no presente o no válido");
         }
 
         filterChain.doFilter(request, response);
@@ -60,4 +69,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 }
-
