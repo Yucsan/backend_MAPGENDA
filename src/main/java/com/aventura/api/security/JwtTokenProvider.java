@@ -41,12 +41,12 @@ public class JwtTokenProvider {
     }
     
     public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject(); // Si estás usando UUID como subject
+        return Jwts.parser()
+                   .setSigningKey(jwtSecret)
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .getSubject();
     }
+
 
 }
