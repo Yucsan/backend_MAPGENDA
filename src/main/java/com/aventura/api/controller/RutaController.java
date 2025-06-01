@@ -6,6 +6,7 @@ import com.aventura.api.entity.Usuario;
 import com.aventura.api.repository.UsuarioRepository;
 import com.aventura.api.service.RutaService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -27,14 +28,20 @@ public class RutaController {
     }
 
     @PostMapping
-    public RutaDTO crearRuta(@RequestBody RutaDTO dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String usuarioId = authentication.getName();  // ID del usuario autenticado
+    public ResponseEntity<?> crearRuta(@RequestBody RutaDTO dto) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String usuarioId = authentication.getName();
 
-        Usuario usuario = usuarioRepository.findById(UUID.fromString(usuarioId))
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            Usuario usuario = usuarioRepository.findById(UUID.fromString(usuarioId))
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return rutaService.crearRuta(dto, usuario);
+            RutaDTO rutaCreada = rutaService.crearRuta(dto, usuario);
+            return ResponseEntity.ok(rutaCreada);
+        } catch (Exception e) {
+            e.printStackTrace(); // 👈 imprime el error exacto en logs
+            return ResponseEntity.status(500).body("❌ Error al crear ruta: " + e.getMessage());
+        }
     }
 
 
