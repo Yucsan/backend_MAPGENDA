@@ -40,10 +40,7 @@ public class RutaService {
         this.rutaMapper = rutaMapper;
     }
 
-    public RutaDTO crearRuta(RutaDTO dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
+    public RutaDTO crearRuta(RutaDTO dto, Usuario usuario) {
         Ruta ruta = rutaMapper.toEntity(dto, usuario);
         Ruta rutaGuardada = rutaRepository.save(ruta);
 
@@ -55,13 +52,13 @@ public class RutaService {
             referencias.add(new RutaLugar(rutaGuardada, lugar, orden++));
         }
 
-
         rutaLugarRepository.saveAll(referencias);
 
         return rutaMapper.toDTO(rutaGuardada, referencias.stream()
-            .map(ref -> ref.getLugar().getId())
-            .collect(Collectors.toList()));
+                .map(ref -> ref.getLugar().getId())
+                .collect(Collectors.toList()));
     }
+
 
     public List<RutaDTO> listarPorUsuario(UUID usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)

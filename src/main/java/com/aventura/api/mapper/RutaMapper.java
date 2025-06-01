@@ -31,7 +31,6 @@ public class RutaMapper {
     public RutaDTO toDTO(Ruta ruta, List<String> lugarIdsOrdenados) {
         return new RutaDTO(
             ruta.getId(),
-            ruta.getUsuario().getId(),
             ruta.getNombre(),
             ruta.getCategoria(),
             ruta.getUbicacionId(),
@@ -41,7 +40,9 @@ public class RutaMapper {
             ruta.getDestinoLat(),
             ruta.getDestinoLng(),
             ruta.getModoTransporte(),
+            ruta.getLugaresIntermedios(),
             lugarIdsOrdenados
         );
     }
+
 }
