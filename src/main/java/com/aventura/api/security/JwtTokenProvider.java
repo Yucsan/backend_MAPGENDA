@@ -15,12 +15,12 @@ public class JwtTokenProvider {
     private final long jwtExpirationInMs = 86400000; // 1 día
 
     public String generateToken(Authentication authentication) {
-    	Usuario usuario = (Usuario) authentication.getPrincipal();
+    	String userId = (String) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-        		.setSubject(usuario.getId().toString())
+        		.setSubject(userId)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

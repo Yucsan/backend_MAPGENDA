@@ -107,7 +107,8 @@ public class UsuarioController {
 
                 // 🔐 Generar JWT
                 UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(usuario.getEmail(), null, null);
+                	    new UsernamePasswordAuthenticationToken(usuario.getId().toString(), null, null); // ✅
+
 
                 String jwt = tokenProvider.generateToken(authToken);
                 
