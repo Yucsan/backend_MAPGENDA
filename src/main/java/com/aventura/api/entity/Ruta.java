@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "ruta")
 public class Ruta {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +30,11 @@ public class Ruta {
 
     @Column(columnDefinition = "TEXT")
     private String lugaresIntermedios;
+    
+    @Column(columnDefinition = "TEXT")
+    private String polylineCodificada;
+    private String categoria;
+    private Long ubicacionId;
+        
+
 }

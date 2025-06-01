@@ -22,4 +22,10 @@ public class RutaLugar {
 	    private Lugar lugar;
 	    
 	    private Integer orden; // Si quieres saber en qué posición va dentro de la ruta
+	    
+	    public RutaLugar(Ruta ruta, Lugar lugar, int orden) {
+	        this.ruta = ruta;
+	        this.lugar = lugar;
+	        this.orden = orden;
+	    }
 }
