@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.aventura.api.entity.Usuario;
+
 import java.util.Date;
 
 @Component
@@ -13,12 +15,12 @@ public class JwtTokenProvider {
     private final long jwtExpirationInMs = 86400000; // 1 día
 
     public String generateToken(Authentication authentication) {
-        String email = authentication.getName();
+    	Usuario usuario = (Usuario) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(email)
+        		.setSubject(usuario.getId().toString())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -37,4 +39,14 @@ public class JwtTokenProvider {
             return false;
         }
     }
+    
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject(); // Si estás usando UUID como subject
+    }
+
 }
