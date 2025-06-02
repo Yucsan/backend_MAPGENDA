@@ -15,6 +15,9 @@ public interface LugarService {
     
     LugarDTO update(String id, LugarDTO dto);
     List<LugarDTO> findByUsuarioId(UUID usuarioId);
+    
+  
+
 
 
 }

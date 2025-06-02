@@ -12,3 +12,9 @@ server:
   port: 8080
   servlet:
     context-path: /aventura
+
+logging:
+ level:
+  root: INFO
+com.aventura: DEBUG
+

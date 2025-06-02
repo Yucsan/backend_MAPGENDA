@@ -1,13 +1,14 @@
 package com.aventura.api.controller;
 
 import com.aventura.api.dto.UbicacionDTO;
+import com.aventura.api.entity.Usuario;
 import com.aventura.api.service.UbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/ubicaciones")
@@ -26,9 +27,11 @@ public class UbicacionController {
         return ResponseEntity.ok(guardada);
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<UbicacionDTO>> obtenerUbicaciones(@PathVariable UUID usuarioId) {
-        List<UbicacionDTO> ubicaciones = ubicacionService.findByUsuarioId(usuarioId);
+    @GetMapping("/usuario")
+    public ResponseEntity<List<UbicacionDTO>> obtenerUbicacionesDelUsuarioActual() {
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UbicacionDTO> ubicaciones = ubicacionService.findByUsuarioId(usuario.getId());
         return ResponseEntity.ok(ubicaciones);
     }
+
 }

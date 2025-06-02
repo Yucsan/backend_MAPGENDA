@@ -15,7 +15,9 @@ public class JwtTokenProvider {
     private final long jwtExpirationInMs = 86400000; // 1 día
 
     public String generateToken(Authentication authentication) {
-    	String userId = (String) authentication.getPrincipal();
+    	Usuario usuario = (Usuario) authentication.getPrincipal(); // 👈 importante: el principal es el objeto Usuario
+    	String userId = usuario.getId().toString(); // 👈 este es un UUID válido
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 

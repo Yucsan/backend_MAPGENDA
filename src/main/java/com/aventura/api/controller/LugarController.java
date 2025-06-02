@@ -1,9 +1,11 @@
 package com.aventura.api.controller;
 
 import com.aventura.api.dto.LugarDTO;
+import com.aventura.api.entity.Usuario;
 import com.aventura.api.service.LugarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +24,12 @@ public class LugarController {
     public List<LugarDTO> getAllLugares() {
         return lugarService.findAll();
     }
+    
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<LugarDTO>> obtenerLugaresPorUsuario(@PathVariable UUID usuarioId) {
+    	 return ResponseEntity.ok(lugarService.findByUsuarioId(usuarioId));
+    }
+ 
 
     @GetMapping("/{id}")
     public ResponseEntity<LugarDTO> getLugarById(@PathVariable String id) {
@@ -35,6 +43,7 @@ public class LugarController {
         LugarDTO actualizado = lugarService.update(id, dto);
         return ResponseEntity.ok(actualizado);
     }
+    
 
 
     @PostMapping
@@ -71,10 +80,12 @@ public class LugarController {
         }
     }
     
-    @GetMapping("/usuario/{usuarioId}")
-    public List<LugarDTO> getLugaresDelUsuario(@PathVariable UUID usuarioId) {
-        return lugarService.findByUsuarioId(usuarioId);
+    @GetMapping("/usuario")
+    public List<LugarDTO> getLugaresDelUsuarioActual() {
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return lugarService.findByUsuarioId(usuario.getId());
     }
+
     
     
 
