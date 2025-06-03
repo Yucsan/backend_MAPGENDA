@@ -14,6 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
+                		.allowedOrigins("https://admin-panel-1ojj.onrender.com")
                         .allowedOrigins("*") // En producción puedes especificar tu dominio
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

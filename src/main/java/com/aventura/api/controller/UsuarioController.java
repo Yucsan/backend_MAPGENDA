@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -25,6 +26,8 @@ import java.util.UUID;
 
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import jakarta.annotation.PostConstruct;
+
 
 @RestController
 @RequestMapping("usuarios")
@@ -34,11 +37,13 @@ public class UsuarioController {
 	private final UsuarioService usuarioService;
 	private final UsuarioMapper usuarioMapper;
 	private final JwtTokenProvider tokenProvider;
+	private final PasswordEncoder passwordEncoder;
 
-	public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, JwtTokenProvider tokenProvider) {
+	public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, JwtTokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
 	    this.usuarioService = usuarioService;
 	    this.usuarioMapper = usuarioMapper;
 	    this.tokenProvider = tokenProvider;
+	    this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping
@@ -133,6 +138,58 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error al procesar el token.");
         }
     }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> creds) {
+        String email = creds.get("email");
+        String password = creds.get("password");
+
+        Optional<Usuario> usuarioOpt = usuarioService.findByEmail(email);
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Solo administradores pueden ingresar");
+        }
+
+        if (usuario.getContrasena() == null || !passwordEncoder.matches(password, usuario.getContrasena())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña inválida");
+        }
+
+        UsernamePasswordAuthenticationToken authToken =
+            new UsernamePasswordAuthenticationToken(usuario, null, null);
+
+        String jwt = tokenProvider.generateToken(authToken);
+
+        return ResponseEntity.ok(Map.of(
+            "token", jwt,
+            "usuario", usuarioMapper.toDTO(usuario)
+        ));
+    }
+    
+
+
+    @PostConstruct
+    public void testPasswordEncoder() {
+        String hash = "$2a$10$vMincc2zw/E3PeZZk8cyYeb3CNDuAFk5ZgCpXVAqg5IgBWZH7vx6e";
+        boolean ok = passwordEncoder.matches("admin123", hash);
+        System.out.println("¿Contraseña válida? " + ok);
+    }
+    /*
+    @PostConstruct
+    public void generarHash() {
+        String rawPassword = "admin123";
+        String hash = passwordEncoder.encode(rawPassword);
+        System.out.println("Nuevo hash generado: " + hash);
+    }*/
+
+
+    
+    
+
 
 
 
