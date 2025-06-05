@@ -5,6 +5,7 @@ import com.aventura.api.entity.Ruta;
 import com.aventura.api.entity.Usuario;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -44,5 +45,10 @@ public class RutaMapper {
             lugarIdsOrdenados
         );
     }
+    
+    public RutaDTO toDTO(Ruta ruta) {
+        return toDTO(ruta, Collections.emptyList());
+    }
+
 
 }

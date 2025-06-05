@@ -85,13 +85,9 @@ public class LugarController {
         Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return lugarService.findByUsuarioId(usuario.getId());
     }
+    @GetMapping("/count")
+    public ResponseEntity<Long> contarLugares() {
+        return ResponseEntity.ok(lugarService.count());
+    }
 
-    
-    
-
-
-    
-    
- 
-    
 }

@@ -8,6 +8,7 @@ import com.aventura.api.repository.UsuarioRepository;
 import com.aventura.api.service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -23,6 +24,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public List<Usuario> findAll() {
@@ -43,10 +48,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioDTO crearUsuario(UsuarioDTO dto) {
         Usuario entity = usuarioMapper.toEntity(dto);
         entity.setFechaRegistro(new Timestamp(System.currentTimeMillis()));
+
+        // ✅ Encriptar si viene contraseña
+        if (dto.getContrasena() != null && !dto.getContrasena().isEmpty()) {
+            entity.setContrasena(passwordEncoder.encode(dto.getContrasena()));
+        }
+
         Usuario guardado = usuarioRepository.save(entity);
         return usuarioMapper.toDTO(guardado);
     }
 
+    
     @Override
     public void deleteById(UUID id) {
         if (!usuarioRepository.existsById(id)) {
@@ -60,8 +72,12 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Usuario con ID " + id + " no encontrado"));
 
-        // Solo actualizamos campos permitidos
         usuarioMapper.updateEntityFromDTO(dto, usuario);
+
+        // ✅ Encriptar si se envía nueva contraseña
+        if (dto.getContrasena() != null && !dto.getContrasena().isEmpty()) {
+            usuario.setContrasena(passwordEncoder.encode(dto.getContrasena()));
+        }
 
         Usuario actualizado = usuarioRepository.save(usuario);
         return usuarioMapper.toDTO(actualizado);
@@ -78,6 +94,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Optional<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
+    @Override
+    public long count() {
+        return usuarioRepository.count();
+    }
+
 
     
     

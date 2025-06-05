@@ -45,6 +45,8 @@ public class UsuarioController {
 	    this.tokenProvider = tokenProvider;
 	    this.passwordEncoder = passwordEncoder;
 	}
+	
+
 
 	@GetMapping
 	public List<UsuarioDTO> getAllUsuarios() {
@@ -185,13 +187,11 @@ public class UsuarioController {
         String hash = passwordEncoder.encode(rawPassword);
         System.out.println("Nuevo hash generado: " + hash);
     }*/
-
-
     
-    
-
-
-
+	@GetMapping("/count")
+	public ResponseEntity<Long> contarUsuarios() {
+	    return ResponseEntity.ok(usuarioService.count());
+	}
 
 
 }

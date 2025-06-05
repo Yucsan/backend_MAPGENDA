@@ -3,6 +3,7 @@ package com.aventura.api.security;
 import com.aventura.api.service.UsuarioService;
 import com.aventura.api.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -23,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
+    @Lazy
     private UsuarioService usuarioService;
 
     @Override

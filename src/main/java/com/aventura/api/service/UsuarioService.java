@@ -1,5 +1,6 @@
 package com.aventura.api.service;
 
+
 import com.aventura.api.dto.UsuarioDTO;
 import com.aventura.api.entity.Usuario;
 
@@ -17,6 +18,10 @@ public interface UsuarioService {
     UsuarioDTO updateUsuario(UUID id, UsuarioDTO dto);
     UsuarioDTO getById(UUID id);
     Optional<Usuario> findByEmail(String email);
+    long count();
+    
+
+   
 
 
     

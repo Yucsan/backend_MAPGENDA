@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface RutaLugarRepository extends JpaRepository<RutaLugar, Long> {
     List<RutaLugar> findByRuta(Ruta ruta);
+    List<RutaLugar> findByRutaIdOrderByOrden(Long rutaId);
+    void deleteByRutaId(Long rutaId);
 }

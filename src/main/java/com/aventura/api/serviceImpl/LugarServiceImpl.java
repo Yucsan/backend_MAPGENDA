@@ -91,7 +91,11 @@ public class LugarServiceImpl implements LugarService {
 	                  .map(lugarMapper::toDTO)
 	                  .toList();
 	}
-	
+	@Override
+	public long count() {
+	    return usuarioRepository.count();
+	}
+
 	
 
 	

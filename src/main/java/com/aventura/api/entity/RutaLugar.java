@@ -21,7 +21,8 @@ public class RutaLugar {
 	    @ManyToOne
 	    private Lugar lugar;
 	    
-	    private Integer orden; // Si quieres saber en qué posición va dentro de la ruta
+	    private Integer orden; 
+	    
 	    
 	    public RutaLugar(Ruta ruta, Lugar lugar, int orden) {
 	        this.ruta = ruta;

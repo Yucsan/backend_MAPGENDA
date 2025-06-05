@@ -12,14 +12,19 @@ import com.aventura.api.repository.UsuarioRepository;
 import com.aventura.api.repository.UbicacionRepository;
 import com.aventura.api.service.UbicacionService;
 
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UbicacionServiceImpl implements UbicacionService {
@@ -120,6 +125,51 @@ public class UbicacionServiceImpl implements UbicacionService {
         double distancia = R * c;
         return distancia <= maxDistanciaMetros;
     }
+
+
+  
+  
+    @Override
+    public Optional<UbicacionDTO> findById(UUID id) {
+        return ubicacionRepository.findById(id)
+                .map(ubicacionMapper::toDTO);
+    }
+
+
+    @Override
+    public UbicacionDTO update(UUID id, UbicacionDTO dto) {
+        Ubicacion existente = ubicacionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ubicación no encontrada"));
+
+        existente.setNombre(dto.getNombre());
+        existente.setLatitud(dto.getLatitud());
+        existente.setLongitud(dto.getLongitud());
+        existente.setTipo(dto.getTipo());
+
+        return ubicacionMapper.toDTO(ubicacionRepository.save(existente));
+    }
+
+
+    @Override
+    public void deleteById(UUID id) {
+        ubicacionRepository.deleteById(id);
+    }
+    
+    @Override
+    public Page<UbicacionDTO> findAll(Pageable pageable) {
+        return ubicacionRepository.findAll(pageable)
+                .map(ubicacionMapper::toDTO);
+    }
+    
+    @Override
+    public long count() {
+        return ubicacionRepository.count();
+    }
+
+    
+ 
+
+
 
 
     
