@@ -93,7 +93,7 @@ public class LugarServiceImpl implements LugarService {
 	}
 	@Override
 	public long count() {
-	    return usuarioRepository.count();
+	    return lugarRepository.count();
 	}
 
 	
