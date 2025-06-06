@@ -1,9 +1,7 @@
 package com.aventura.api.serviceImpl;
 
 import com.aventura.api.dto.UbicacionDTO;
-import com.aventura.api.dto.UsuarioMesDTO;
 
-import org.springframework.http.HttpStatus;
 
 import com.aventura.api.entity.Ubicacion;
 import com.aventura.api.entity.Usuario;
@@ -19,13 +17,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @Service
@@ -63,11 +59,12 @@ public class UbicacionServiceImpl implements UbicacionService {
             		existente.getLatitud(), existente.getLongitud());
             
             // Comprobación por redondeo exacto
+            /*
             if (latRed == latDbRed && lonRed == lonDbRed) {
                 System.out.println("⚠️ Ubicación con coordenadas prácticamente idénticas ya existe.");
                 throw new UbicacionDuplicadaException("Ubicación duplicada: " + existente.getNombre() + " a " + String.format("%.2f", distancia) + " m");
 
-            }
+            }*/
 
 
             System.out.printf("Comparando con: %s (%f, %f) -> Distancia: %.2f metros%n",
@@ -77,12 +74,12 @@ public class UbicacionServiceImpl implements UbicacionService {
                     distancia
             );
 
-            if (distancia <= 80000) { // Aumentamos el margen para evitar falsos negativos
-                System.out.printf("⚠️ Ubicación '%s' está muy cerca (%.2f m) — NO se guarda%n",
+            if (distancia <= 2000 && existente.getNombre().equalsIgnoreCase(dto.getNombre())) {
+                System.out.printf("⚠️ Ubicación '%s' está muy cerca y tiene el mismo nombre (%.2f m) — NO se guarda%n",
                         existente.getNombre(), distancia);
-                throw new UbicacionDuplicadaException("Ya existe una ubicación cercana: " + existente.getNombre()+" distancia "+ String.format("%.2f", distancia) + " m");
-
+                throw new UbicacionDuplicadaException("Ya existe una ubicación muy cercana con el mismo nombre: " + existente.getNombre() + " (" + String.format("%.2f", distancia) + " m)");
             }
+
         }
 
         // Si pasa todas las validaciones, se guarda
