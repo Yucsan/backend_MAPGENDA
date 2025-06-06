@@ -2,6 +2,7 @@ package com.aventura.api.service;
 
 import com.aventura.api.dto.UbicacionDTO;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,5 +19,7 @@ public interface UbicacionService {
     void deleteById(UUID id);
     Page<UbicacionDTO> findAll(Pageable pageable);
     long count();
+   
+
 
 }

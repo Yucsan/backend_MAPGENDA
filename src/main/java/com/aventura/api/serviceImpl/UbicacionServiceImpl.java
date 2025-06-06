@@ -1,6 +1,8 @@
 package com.aventura.api.serviceImpl;
 
 import com.aventura.api.dto.UbicacionDTO;
+import com.aventura.api.dto.UsuarioMesDTO;
+
 import org.springframework.http.HttpStatus;
 
 import com.aventura.api.entity.Ubicacion;
@@ -165,6 +167,8 @@ public class UbicacionServiceImpl implements UbicacionService {
     public long count() {
         return ubicacionRepository.count();
     }
+    
+ 
 
     
  

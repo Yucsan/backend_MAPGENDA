@@ -2,6 +2,7 @@ package com.aventura.api.service;
 
 
 import com.aventura.api.dto.UsuarioDTO;
+import com.aventura.api.dto.UsuarioMesDTO;
 import com.aventura.api.entity.Usuario;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface UsuarioService {
     UsuarioDTO getById(UUID id);
     Optional<Usuario> findByEmail(String email);
     long count();
+    List<UsuarioMesDTO> obtenerEstadisticasMensuales();
     
 
    

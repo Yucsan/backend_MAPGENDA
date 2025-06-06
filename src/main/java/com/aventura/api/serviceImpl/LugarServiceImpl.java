@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -95,6 +96,30 @@ public class LugarServiceImpl implements LugarService {
 	public long count() {
 	    return usuarioRepository.count();
 	}
+	
+	@Override
+	public Map<String, Long> contarPorTipo() {
+	    List<Object[]> resultados = lugarRepository.contarPorTipo();
+	    return resultados.stream()
+	        .collect(Collectors.toMap(
+	            obj -> (String) obj[0],
+	            obj -> ((Number) obj[1]).longValue()
+	        ));
+	}
+	
+	@Override
+	public Map<String, Long> contarPorMes() {
+	    List<Object[]> resultados = lugarRepository.contarPorMes();
+	    return resultados.stream()
+	            .collect(Collectors.toMap(
+	                row -> (String) row[0],   // mes
+	                row -> ((Number) row[1]).longValue() // cantidad
+	            ));
+	}
+
+	
+	
+
 
 	
 

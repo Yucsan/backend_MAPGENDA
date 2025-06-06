@@ -1,5 +1,8 @@
 package com.aventura.api.entity;
 
+import java.sql.Timestamp; // ✅ CORRECTO
+
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +35,14 @@ public class Lugar {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+    
+    @Column(name = "fecha_creacion", updatable = false)
+    private Timestamp fechaCreacion;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = new Timestamp(System.currentTimeMillis());
+    }
+
 
 }
