@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -89,5 +90,18 @@ public class LugarController {
     public ResponseEntity<Long> contarLugares() {
         return ResponseEntity.ok(lugarService.count());
     }
+    
+    @GetMapping("/tipo-distribucion")
+    public ResponseEntity<Map<String, Long>> obtenerDistribucionPorTipo() {
+        return ResponseEntity.ok(lugarService.contarPorTipo());
+    }
+    
+    @GetMapping("/estadisticas-mensuales")
+    public ResponseEntity<Map<String, Long>> contarLugaresPorMes() {
+        return ResponseEntity.ok(lugarService.contarPorMes());
+    }
+
+
+    
 
 }

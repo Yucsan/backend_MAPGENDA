@@ -1,6 +1,7 @@
 package com.aventura.api.serviceImpl;
 
 import com.aventura.api.dto.UsuarioDTO;
+import com.aventura.api.dto.UsuarioMesDTO;
 import com.aventura.api.entity.Usuario;
 import com.aventura.api.exception.ResourceNotFoundException;
 import com.aventura.api.mapper.UsuarioMapper;
@@ -98,6 +99,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     public long count() {
         return usuarioRepository.count();
     }
+    
+    @Override
+    public List<UsuarioMesDTO> obtenerEstadisticasMensuales() {
+        List<Object[]> resultados = usuarioRepository.contarUsuariosPorMes();
+        return resultados.stream()
+            .map(obj -> new UsuarioMesDTO((String) obj[0], ((Number) obj[1]).longValue()))
+            .toList();
+    }
+
 
 
     

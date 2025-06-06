@@ -1,6 +1,7 @@
 package com.aventura.api.controller;
 
 import com.aventura.api.dto.UsuarioDTO;
+import com.aventura.api.dto.UsuarioMesDTO;
 import com.aventura.api.entity.Usuario;
 import com.aventura.api.mapper.UsuarioMapper;
 import com.aventura.api.security.JwtTokenProvider;
@@ -188,10 +189,33 @@ public class UsuarioController {
         System.out.println("Nuevo hash generado: " + hash);
     }*/
     
+    //metodos Para el Dashboard
+    
 	@GetMapping("/count")
 	public ResponseEntity<Long> contarUsuarios() {
 	    return ResponseEntity.ok(usuarioService.count());
 	}
+	
+	@GetMapping("/estadisticas-mensuales")
+	public ResponseEntity<List<UsuarioMesDTO>> obtenerEstadisticasMensuales() {
+	    return ResponseEntity.ok(usuarioService.obtenerEstadisticasMensuales());
+	}
+
+	
+	
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
