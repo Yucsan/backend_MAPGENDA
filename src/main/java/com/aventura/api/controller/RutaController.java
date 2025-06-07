@@ -86,7 +86,7 @@ public class RutaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarRuta(@PathVariable Long id) {
-        rutaLugarRepository.deleteByRutaId(id);
+        rutaLugarRepository.eliminarPorRutaId(id);
         rutaRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }

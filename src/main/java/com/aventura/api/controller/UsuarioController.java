@@ -1,10 +1,18 @@
 package com.aventura.api.controller;
 
+import com.aventura.api.dto.LugarDTO;
+import com.aventura.api.dto.UbicacionDTO;
 import com.aventura.api.dto.UsuarioDTO;
 import com.aventura.api.dto.UsuarioMesDTO;
+import com.aventura.api.entity.Ruta;
 import com.aventura.api.entity.Usuario;
 import com.aventura.api.mapper.UsuarioMapper;
+import com.aventura.api.repository.RutaLugarRepository;
+import com.aventura.api.repository.RutaRepository;
+import com.aventura.api.repository.UsuarioRepository;
 import com.aventura.api.security.JwtTokenProvider;
+import com.aventura.api.service.LugarService;
+import com.aventura.api.service.UbicacionService;
 import com.aventura.api.service.UsuarioService;
 import com.aventura.api.serviceImpl.UsuarioServiceImpl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -28,25 +36,24 @@ import java.util.UUID;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 
 @RestController
 @RequestMapping("usuarios")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class UsuarioController {
-
-	private final UsuarioService usuarioService;
-	private final UsuarioMapper usuarioMapper;
-	private final JwtTokenProvider tokenProvider;
-	private final PasswordEncoder passwordEncoder;
-
-	public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, JwtTokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
-	    this.usuarioService = usuarioService;
-	    this.usuarioMapper = usuarioMapper;
-	    this.tokenProvider = tokenProvider;
-	    this.passwordEncoder = passwordEncoder;
-	}
 	
+    private final UsuarioService usuarioService;
+    private final UsuarioMapper usuarioMapper;
+    private final JwtTokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final UsuarioRepository usuarioRepository;
+    private final RutaRepository rutaRepository;
+    private final RutaLugarRepository rutaLugarRepository;
+    private final UbicacionService ubicacionService;
+    private final LugarService lugarService;
 
 
 	@GetMapping
@@ -200,6 +207,48 @@ public class UsuarioController {
 	public ResponseEntity<List<UsuarioMesDTO>> obtenerEstadisticasMensuales() {
 	    return ResponseEntity.ok(usuarioService.obtenerEstadisticasMensuales());
 	}
+	
+	@DeleteMapping("/{id}/eliminar-con-datos")
+	public ResponseEntity<?> eliminarUsuarioConDatos(@PathVariable UUID id) {
+	    Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+	    if (!usuarioOpt.isPresent()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+	    }
+
+	    Usuario usuario = usuarioOpt.get();
+
+	    try {
+	        // 1. Eliminar rutas y sus relaciones con lugares
+	        List<Ruta> rutas = rutaRepository.findByUsuarioId(usuario.getId());
+	        for (Ruta ruta : rutas) {
+	            rutaLugarRepository.eliminarPorRutaId(ruta.getId());
+	            rutaRepository.delete(ruta);
+	        }
+
+	        // 2. Eliminar lugares del usuario
+	        List<LugarDTO> lugares = lugarService.findByUsuarioId(usuario.getId());
+	        for (LugarDTO lugar : lugares) {
+	            lugarService.deleteById(lugar.getId());
+	        }
+
+	        // 3. Eliminar ubicaciones del usuario
+	        List<UbicacionDTO> ubicaciones = ubicacionService.findByUsuarioId(usuario.getId());
+	        for (UbicacionDTO ubicacion : ubicaciones) {
+	            ubicacionService.deleteById(ubicacion.getId());
+	        }
+
+	        // 4. Eliminar al usuario
+	        usuarioRepository.delete(usuario);
+
+	        return ResponseEntity.noContent().build();
+
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al eliminar el usuario y sus datos: " + e.getMessage());
+	    }
+	}
+
 
 	
 	

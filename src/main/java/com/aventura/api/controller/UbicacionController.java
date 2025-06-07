@@ -90,12 +90,9 @@ public class UbicacionController {
     public ResponseEntity<Long> contarUbicaciones() {
         return ResponseEntity.ok(ubicacionService.count());
     }
-    
-
-
- 
-
+   
 }
+
     
     
     

@@ -11,7 +11,10 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ruta")
+@Table(
+	    name = "ruta",
+	    uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "nombre"})
+	)
 public class Ruta {
 	
     @Id

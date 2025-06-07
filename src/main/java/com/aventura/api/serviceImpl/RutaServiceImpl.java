@@ -74,6 +74,8 @@ public class RutaServiceImpl implements RutaService {
     public List<RutaDTO> listarPorUsuario(UUID usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        
 
         List<Ruta> rutas = rutaRepository.findByUsuario(usuario);
 
@@ -108,7 +110,8 @@ public class RutaServiceImpl implements RutaService {
         ruta = rutaRepository.save(ruta);
 
         // Si es edición, limpiar antiguos
-        rutaLugarRepository.deleteByRutaId(ruta.getId());
+        //rutaLugarRepository.deleteByRutaId(ruta.getId());
+        rutaLugarRepository.eliminarPorRutaId(ruta.getId());
 
         // Guardar lugares con orden
         List<String> lugares = dto.getLugarIdsOrdenados();
@@ -128,6 +131,16 @@ public class RutaServiceImpl implements RutaService {
 
         return ruta;
     }
+    
+    @Service
+    public class RutaService {
+        @Transactional
+        public void eliminarRuta(Long id) {
+        	rutaLugarRepository.eliminarPorRutaId(id);
+            rutaRepository.deleteById(id);
+        }
+    }
+
     
     @Override
     public List<RutaDTO> listarTodas() {

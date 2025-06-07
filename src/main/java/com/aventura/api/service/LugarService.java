@@ -21,6 +21,8 @@ public interface LugarService {
     Map<String, Long> contarPorTipo();
 
     Map<String, Long> contarPorMes();
+    
+    
 
   
 
