@@ -40,11 +40,21 @@ public class RutaServiceImpl implements RutaService {
     }
 
     @Override
+    @Transactional
     public RutaDTO crearRuta(RutaDTO dto, Usuario usuario) {
         log.info("🚧 Iniciando creación de ruta: '{}'", dto.getNombre());
 
-        Ruta ruta = rutaMapper.toEntity(dto, usuario);
-        Ruta rutaGuardada = rutaRepository.save(ruta);
+        Optional<Ruta> existente = rutaRepository.findByUsuarioAndNombre(usuario, dto.getNombre());
+
+        Ruta rutaGuardada;
+        if (existente.isPresent()) {
+            log.info("♻️ Ruta con nombre '{}' ya existe para el usuario. Usando la existente.", dto.getNombre());
+            rutaGuardada = existente.get();
+        } else {
+            Ruta nuevaRuta = rutaMapper.toEntity(dto, usuario);
+            rutaGuardada = rutaRepository.save(nuevaRuta);
+        }
+
 
         List<RutaLugar> referencias = new ArrayList<>();
         int orden = 0;
@@ -60,7 +70,11 @@ public class RutaServiceImpl implements RutaService {
                     .orElseThrow(() -> new LugarNotFoundException(lugarId));
             referencias.add(new RutaLugar(rutaGuardada, lugar, orden++));
         }
-
+        List<RutaLugar> existentes = rutaLugarRepository.findByRuta(rutaGuardada);
+        if (!existentes.isEmpty()) {
+            rutaLugarRepository.deleteByRuta(rutaGuardada); // 🧹 limpiar antes
+        }
+        //rutaLugarRepository.deleteByRuta(rutaGuardada);
         rutaLugarRepository.saveAll(referencias);
 
         log.info("✅ Ruta '{}' creada correctamente con {} lugares.", dto.getNombre(), referencias.size());

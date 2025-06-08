@@ -38,7 +38,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequestMapping("usuarios")
 @CrossOrigin(origins = "*")
@@ -54,7 +53,6 @@ public class UsuarioController {
     private final RutaLugarRepository rutaLugarRepository;
     private final UbicacionService ubicacionService;
     private final LugarService lugarService;
-
 
 	@GetMapping
 	public List<UsuarioDTO> getAllUsuarios() {
@@ -109,6 +107,11 @@ public class UsuarioController {
 
                 if (existente.isPresent()) {
                     usuario = existente.get();
+                    
+                    if (!usuario.getVerificado()) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cuenta desactivada");
+                    }
+                    
                 } else {
                     // Crear nuevo usuario
                     usuario = new Usuario();
@@ -123,8 +126,6 @@ public class UsuarioController {
                 // 🔐 Generar JWT
                 UsernamePasswordAuthenticationToken authToken =
                 	    new UsernamePasswordAuthenticationToken(usuario, null, null);
-
-
 
                 String jwt = tokenProvider.generateToken(authToken);
                 
@@ -180,8 +181,6 @@ public class UsuarioController {
         ));
     }
     
-
-
     @PostConstruct
     public void testPasswordEncoder() {
         String hash = "$2a$10$vMincc2zw/E3PeZZk8cyYeb3CNDuAFk5ZgCpXVAqg5IgBWZH7vx6e";
@@ -248,11 +247,48 @@ public class UsuarioController {
 	                .body("Error al eliminar el usuario y sus datos: " + e.getMessage());
 	    }
 	}
+	
+	
+	//tratamiento de cuentas
+	@PutMapping("/{id}/desactivar")
+	public ResponseEntity<?> desactivarCuenta(@PathVariable UUID id) {
+	    Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+	    if (usuarioOpt.isPresent()) {
+	        Usuario usuario = usuarioOpt.get();
+	        usuario.setVerificado(false);
+	        usuarioRepository.save(usuario);
+	        return ResponseEntity.ok("Cuenta desactivada");
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+	@PutMapping("/{id}/reactivar")
+	public ResponseEntity<?> reactivarCuenta(@PathVariable UUID id) {
+	    Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+	    if (usuarioOpt.isPresent()) {
+	        Usuario usuario = usuarioOpt.get();
+	        usuario.setVerificado(true);
+	        usuarioRepository.save(usuario);
+	        return ResponseEntity.ok("Cuenta reactivada");
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	@GetMapping("/email/{email}")
+	public ResponseEntity<UsuarioDTO> getUsuarioByEmail(@PathVariable String email) {
+	    Optional<Usuario> usuarioOpt = usuarioService.findByEmail(email);
+	    if (usuarioOpt.isPresent()) {
+	        Usuario usuario = usuarioOpt.get();
+	        return ResponseEntity.ok(usuarioMapper.toDTO(usuario));
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
 
 
 	
-	
-
 
 }
 

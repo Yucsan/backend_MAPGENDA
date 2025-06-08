@@ -34,7 +34,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/usuarios/login", "/usuarios/login-google").permitAll()
+                .requestMatchers("/usuarios/login", "/usuarios/login-google", "/usuarios/email/**", "/usuarios/*/reactivar" ).permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/rutas/**").authenticated()
                 .anyRequest().authenticated()
             )

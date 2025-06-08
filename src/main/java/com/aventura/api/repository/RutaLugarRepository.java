@@ -27,5 +27,7 @@ public interface RutaLugarRepository extends JpaRepository<RutaLugar, Long> {
     @Modifying
     @Query("DELETE FROM RutaLugar rl WHERE rl.ruta.id = :rutaId")
     void eliminarPorRutaId(@Param("rutaId") Long rutaId); // ✅ nombre distinto y claro
+    
+	 void deleteByRuta(Ruta ruta);
 }
 

@@ -4,10 +4,17 @@ import com.aventura.api.dto.RutaDTO;
 import com.aventura.api.entity.Ruta;
 import com.aventura.api.entity.RutaLugar;
 import com.aventura.api.entity.Usuario;
+import com.aventura.api.mapper.UsuarioMapper;
 import com.aventura.api.repository.RutaLugarRepository;
 import com.aventura.api.repository.RutaRepository;
 import com.aventura.api.repository.UsuarioRepository;
+import com.aventura.api.security.JwtTokenProvider;
+import com.aventura.api.service.LugarService;
 import com.aventura.api.service.RutaService;
+import com.aventura.api.service.UbicacionService;
+import com.aventura.api.service.UsuarioService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rutas")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class RutaController {
 	
 	
@@ -36,7 +45,7 @@ public class RutaController {
         
     private static final Logger log = LoggerFactory.getLogger(RutaController.class);
 
-
+/*
     public RutaController(
     			RutaService rutaService, 
     			UsuarioRepository usuarioRepository,
@@ -48,7 +57,7 @@ public class RutaController {
         		this.usuarioRepository = usuarioRepository;
         		this.rutaLugarRepository = rutaLugarRepository;
         	    this.rutaRepository = rutaRepository;
-    }
+    }*/
     
     @GetMapping
     public List<RutaDTO> obtenerTodasLasRutas() {
