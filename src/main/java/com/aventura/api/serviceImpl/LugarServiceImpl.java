@@ -116,6 +116,17 @@ public class LugarServiceImpl implements LugarService {
 	                row -> ((Number) row[1]).longValue() // cantidad
 	            ));
 	}
+	
+	@Override
+	public Lugar saveEntity(Lugar lugar) {
+	    return lugarRepository.save(lugar);
+	}
+
+	@Override
+	public Optional<Lugar> findEntityById(String id) {
+	    return lugarRepository.findById(id);
+	}
+
 
 	
 	
