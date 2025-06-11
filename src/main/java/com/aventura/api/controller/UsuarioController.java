@@ -282,6 +282,9 @@ public class UsuarioController {
 	@PostMapping("/eliminar-imagen")
 	public ResponseEntity<?> eliminarImagen(@RequestHeader("Authorization") String authHeader,
 	                                        @RequestBody Map<String, String> body) {
+		
+		System.out.println("📥 Endpoint /usuarios/eliminar-imagen alcanzado correctamente.");
+
 	    try {
 	        String token = authHeader.replace("Bearer ", "");
 

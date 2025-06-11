@@ -36,6 +36,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/usuarios/login", "/usuarios/login-google", "/usuarios/email/**", "/usuarios/*/reactivar" ).permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/rutas/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
