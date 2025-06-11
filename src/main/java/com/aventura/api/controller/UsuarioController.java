@@ -283,19 +283,21 @@ public class UsuarioController {
 	public ResponseEntity<?> eliminarImagen(@RequestHeader("Authorization") String authHeader,
 	                                        @RequestBody Map<String, String> body) {
 	    try {
-	        // 1. Verificar el token
 	        String token = authHeader.replace("Bearer ", "");
+
 	        if (!tokenProvider.validateToken(token)) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido");
 	        }
 
-	        // 2. Extraer public_id desde el cuerpo
-	        String publicId = body.get("public_id");
-	        if (publicId == null || publicId.isBlank()) {
-	            return ResponseEntity.badRequest().body("public_id requerido");
+	        // ✅ Obtener el usuario autenticado
+	        String usuarioId = tokenProvider.getUserIdFromToken(token);
+	        if (usuarioId == null) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token sin ID de usuario válido");
 	        }
 
-	        // 3. Configurar Cloudinary
+	        // 🔒 En producción aquí deberías verificar que el usuario sea dueño de la imagen
+	        String publicId = body.get("public_id");
+
 	        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 	            "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),
 	            "api_key", System.getenv("CLOUDINARY_API_KEY"),
@@ -310,11 +312,11 @@ public class UsuarioController {
 	        ));
 
 	    } catch (Exception e) {
-	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                .body(Map.of("success", false, "error", e.getMessage()));
 	    }
 	}
+
 
 	
 	
