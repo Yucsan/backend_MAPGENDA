@@ -300,6 +300,12 @@ public class UsuarioController {
 
 	        // 🔒 En producción aquí deberías verificar que el usuario sea dueño de la imagen
 	        String publicId = body.get("public_id");
+	        
+	        // 🔍 LOG DE VARIABLES DE ENTORNO
+	        System.out.println("🧪 ENV → CLOUDINARY_CLOUD_NAME = " + System.getenv("CLOUDINARY_CLOUD_NAME"));
+	        System.out.println("🧪 ENV → CLOUDINARY_API_KEY = " + System.getenv("CLOUDINARY_API_KEY"));
+	        System.out.println("🧪 ENV → CLOUDINARY_API_SECRET = " +
+	            (System.getenv("CLOUDINARY_API_SECRET") != null ? "✔️ loaded" : "❌ null"));
 
 	        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 	            "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),

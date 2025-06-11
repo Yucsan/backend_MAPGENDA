@@ -34,7 +34,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/usuarios/login", "/usuarios/login-google", "/usuarios/email/**", "/usuarios/*/reactivar" ).permitAll()
+                .requestMatchers(
+                		"/usuarios/login", 
+                		"/usuarios/login-google", 
+                		"/usuarios/email/**", 
+                		"/usuarios/*/reactivar",
+                		"/usuarios/eliminar-imagen"
+                		).permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/rutas/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").authenticated()
                 .anyRequest().authenticated()
@@ -43,25 +49,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    /*
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors()
-            .and()
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()  // 👈 Toda petición permitida temporalmente
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-*/
-    
-    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
