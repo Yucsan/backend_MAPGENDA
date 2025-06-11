@@ -1,6 +1,7 @@
 package com.aventura.api.service;
 
 import com.aventura.api.dto.LugarDTO;
+import com.aventura.api.entity.Lugar;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,11 @@ public interface LugarService {
     Map<String, Long> contarPorTipo();
 
     Map<String, Long> contarPorMes();
+    
+    Optional<Lugar> findEntityById(String id);
+    
+    Lugar saveEntity(Lugar lugar);
+
     
     
 
