@@ -41,7 +41,7 @@ public class SecurityConfig {
                 		"/usuarios/*/reactivar"
                 		).permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/rutas/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").permitAll()
+                .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
