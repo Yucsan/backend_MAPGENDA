@@ -38,11 +38,10 @@ public class SecurityConfig {
                 		"/usuarios/login", 
                 		"/usuarios/login-google", 
                 		"/usuarios/email/**", 
-                		"/usuarios/*/reactivar",
-                		"/usuarios/eliminar-imagen"
+                		"/usuarios/*/reactivar"
                 		).permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/rutas/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").authenticated()
+                .requestMatchers(HttpMethod.POST, "/usuarios/eliminar-imagen").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
